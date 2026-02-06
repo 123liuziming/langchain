@@ -92,7 +92,6 @@ from langchain_core.runnables import (
     RunnableMap,
     RunnablePassthrough,
 )
-from langchain_core.runnables.config import run_in_executor
 from langchain_core.tools import BaseTool
 from langchain_core.tools.base import _stringify
 from langchain_core.utils import get_pydantic_field_names
@@ -1638,9 +1637,7 @@ class BaseChatOpenAI(BaseChatModel):
             and hasattr(raw_response, "headers")
         ):
             generation_info = {"headers": dict(raw_response.headers)}
-        return await run_in_executor(
-            None, self._create_chat_result, response, generation_info
-        )
+        return self._create_chat_result(response, generation_info)
 
     @property
     def _identifying_params(self) -> dict[str, Any]:
